@@ -35,7 +35,7 @@ runs:
   steps:
     - name: Find Asset
       id: find
-      uses: paketo-buildpacks/github-config/actions/release/find-asset@main
+      uses: paketo-buildpacks/github-config/actions/release/find-asset@arjun024-patch-1
       with:
         asset_pattern: ${{ inputs.asset_pattern }}
         search_depth: ${{ inputs.search_depth }}
