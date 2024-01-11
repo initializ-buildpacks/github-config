@@ -15,11 +15,11 @@ inputs:
   committer_name:
     description: 'Name of the committer'
     required: false
-    default: 'paketo-bot'
+    default: 'vivek'
   committer_email:
     description: 'Email of the committer'
     required: false
-    default: 'paketobuildpacks@gmail.com'
+    default: 'vyadav@initializ.io'
   keyid:
     description: 'ID of GPG signing key to use for signed commit'
     required: false
