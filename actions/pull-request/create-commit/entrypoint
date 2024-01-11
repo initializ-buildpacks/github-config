@@ -47,6 +47,7 @@ function main() {
   done
 
   git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
   if [ -n "$keyid" ] && [ -n "$key" ]; then
     mkdir -p ~/.gnupg/
     printf "quiet" > ~/.gnupg/options
@@ -62,7 +63,7 @@ function main() {
 
   if [[ -n "$(git status --short -- "${pathspec}")" ]]; then
     git add --all "${pathspec}"
-    git commit --message "${message}"
+    git commit --message "${message}" -S"${keyid}"
 
     echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
     exit 0
