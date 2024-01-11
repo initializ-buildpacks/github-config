@@ -22,7 +22,7 @@ inputs:
     default: 'vyadav@initializ.io'
   keyid:
     description: 'ID of GPG signing key to use for signed commit'
-    required: false
+    required: true
     
   key:
     description: 'GPG signing key to use for signed commit'
