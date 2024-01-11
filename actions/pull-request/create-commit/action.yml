@@ -22,11 +22,11 @@ inputs:
     default: 'paketobuildpacks@gmail.com'
   keyid:
     description: 'ID of GPG signing key to use for signed commit'
-    required: false
+    required: true
     default: ''
   key:
     description: 'GPG signing key to use for signed commit'
-    required: false
+    required: true
     default: ''
 
 outputs:
