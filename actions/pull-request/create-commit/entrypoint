@@ -47,14 +47,16 @@ function main() {
   done
 
   git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
   if [ -n "$keyid" ] && [ -n "$key" ]; then
-    mkdir -p ~/.gnupg/
-    printf "quiet" > ~/.gnupg/options
-    printf "%s" "$key" | base64 -d > ~/.gnupg/private.key
-    gpg --options ~/.gnupg/options --import ~/.gnupg/private.key
+    mkdir -p /github/home/.gnupg/
+    echo "use-agent" > /github/home/.gnupg/gpg.conf
+    echo "$key" | base64 -d > /github/home/.gnupg/private.key
+    gpg --batch --import /github/home/.gnupg/private.key
+    echo "$key" | gpg --batch --passphrase-fd 0 --import
 
     git config --global user.signingkey "$keyid"
-    git config --global commit.gpgsign true
+    git config --global commit.gpgSign true
   fi
 
   git config --global user.name "${committer_name}"
