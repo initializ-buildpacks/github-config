@@ -14,7 +14,7 @@ inputs:
     required: true
   committer_name:
     description: 'Name of the committer'
-    required: true
+    required: false
     default: 'Vivek'
   committer_email:
     description: 'Email of the committer'
@@ -23,11 +23,11 @@ inputs:
   keyid:
     description: 'ID of GPG signing key to use for signed commit'
     required: true
-    default: ${{ secrets.INITIALIZ_GPG_SIGNING_KEY_ID }}
+    
   key:
     description: 'GPG signing key to use for signed commit'
     required: true
-    default: ${{ secrets.INITIALIZ_GPG_SIGNING_KEY }}
+    
 
 outputs:
   commit_sha:
