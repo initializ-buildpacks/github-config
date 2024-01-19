@@ -26,7 +26,7 @@ func TestEntrypoint(t *testing.T) {
 	SetDefaultEventuallyTimeout(5 * time.Second)
 
 	var err error
-	entrypoint, err := gexec.Build("github.com/paketo-buildpacks/github-config/actions/tag/calculate-semver-tag/entrypoint")
+	entrypoint, err := gexec.Build("github.com/initializ-buildpacks/github-config/actions/tag/calculate-semver-tag/entrypoint")
 	Expect(err).NotTo(HaveOccurred())
 
 	spec.Run(t, "calculate-semver", func(t *testing.T, context spec.G, it spec.S) {
