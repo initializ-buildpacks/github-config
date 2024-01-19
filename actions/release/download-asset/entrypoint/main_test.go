@@ -26,8 +26,9 @@ func TestEntrypoint(t *testing.T) {
 	SetDefaultEventuallyTimeout(5 * time.Second)
 
 	var err error
-	entrypoint, err := gexec.Build("github.com/paketo-buildpacks/github-config/actions/release/download-asset/entrypoint")
+	entrypoint, err := gexec.Build("github.com/initializ-buildpacks/github-config/actions/release/download-asset/entrypoint")
 	Expect(err).NotTo(HaveOccurred())
+	
 
 	spec.Run(t, "download-asset", func(t *testing.T, context spec.G, it spec.S) {
 		var (

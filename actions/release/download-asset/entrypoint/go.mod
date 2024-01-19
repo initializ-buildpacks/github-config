@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/actions/release/download-asset/entrypoint
+module github.com/initializ-buildpacks/github-config/actions/release/download-asset/entrypoint
 
 go 1.18
 

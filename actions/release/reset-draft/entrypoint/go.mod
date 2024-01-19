@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/actions/release/reset-draft/entrypoint
+module github.com/initializ-buildpacks/github-config/actions/release/reset-draft/entrypoint
 
 go 1.14
 

@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/scripts/time-to-merge
+module github.com/initializ-buildpacks/github-config/scripts/time-to-merge
 
 go 1.15
 

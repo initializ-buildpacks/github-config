@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/actions/dispatch/entrypoint
+module github.com/initializ-buildpacks/github-config/actions/dispatch/entrypoint
 
 go 1.14
 

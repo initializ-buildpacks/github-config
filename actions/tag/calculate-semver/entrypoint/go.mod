@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/actions/tag/calculate-semver-tag/entrypoint
+module github.com/initializ-buildpacks/github-config/actions/tag/calculate-semver-tag/entrypoint
 
 go 1.16
 

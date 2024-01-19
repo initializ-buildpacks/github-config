@@ -54,7 +54,7 @@ const closedPRCommitsResponseBase string = `[{
 func TestMergeTimeCalculator(t *testing.T) {
 	var Expect = NewWithT(t).Expect
 
-	mergeTimeCalculator, err := gexec.Build("github.com/paketo-buildpacks/github-config/scripts/time-to-merge")
+	mergeTimeCalculator, err := gexec.Build("github.com/initializ-buildpacks/github-config/scripts/time-to-merge")
 	Expect(err).NotTo(HaveOccurred())
 
 	spec.Run(t, "scripts/time-to-merge", func(t *testing.T, context spec.G, it spec.S) {

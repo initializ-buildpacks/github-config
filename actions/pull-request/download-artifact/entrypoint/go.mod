@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/actions/pull-request/download-artifact/entrypoint
+module github.com/initializ-buildpacks/github-config/actions/pull-request/download-artifact/entrypoint
 
 go 1.16
 

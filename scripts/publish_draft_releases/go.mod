@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/github-config/scripts/publish-draft-releases
+module github.com/initializ-buildpacks/github-config/scripts/publish-draft-releases
 
 go 1.19
 

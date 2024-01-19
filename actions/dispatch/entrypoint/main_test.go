@@ -29,7 +29,7 @@ func TestEntrypoint(t *testing.T) {
 	SetDefaultEventuallyTimeout(5 * time.Second)
 
 	var err error
-	entrypoint, err = gexec.Build("github.com/paketo-buildpacks/github-config/actions/dispatch/entrypoint")
+	entrypoint, err = gexec.Build("github.com/initializ-buildpacks/github-config/actions/dispatch/entrypoint")
 	Expect(err).NotTo(HaveOccurred())
 
 	spec.Run(t, "dispatch", func(t *testing.T, context spec.G, it spec.S) {
