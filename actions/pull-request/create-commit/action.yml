@@ -37,10 +37,10 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-  - "--message"
-  - ${{ inputs.message }}
-  - "--pathspec"
-  - ${{ inputs.pathspec }}
+  # - "--message"
+  # - ${{ inputs.message }}
+  # - "--pathspec"
+  # - ${{ inputs.pathspec }}
   - "--committer-name"
   - ${{ inputs.committer_name }}
   - "--committer-email"
