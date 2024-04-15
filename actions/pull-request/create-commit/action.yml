@@ -22,12 +22,12 @@ inputs:
     default: 'initializllc@gmail.com'
   keyid:
     description: 'ID of GPG signing key to use for signed commit'
-    required: true
-    
+    required: false
+    default: ''
   key:
     description: 'GPG signing key to use for signed commit'
-    required: true
-    
+    required: false
+    default: ''
 
 outputs:
   commit_sha:
