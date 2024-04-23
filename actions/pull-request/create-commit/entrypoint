@@ -46,20 +46,15 @@ function main() {
     esac
   done
 
-  # Set GPG home directory to avoid unsafe permissions warning
-  export GNUPGHOME="/github/home/.gnupg"
-
+  git config --global --add safe.directory "${GITHUB_WORKSPACE}"
   if [ -n "$keyid" ] && [ -n "$key" ]; then
-    mkdir -p "$GNUPGHOME"
-    echo "use-agent" > "$GNUPGHOME/gpg.conf"
-    
-    # Import the GPG private key
-    echo "$key" | base64 -d > "$GNUPGHOME/private.key"
-    gpg --batch --import "$GNUPGHOME/private.key"
-    
-    # Use the GPG key for signing
+    mkdir -p ~/.gnupg/
+    printf "quiet" > ~/.gnupg/options
+    printf "%s" "$key" | base64 -d > ~/.gnupg/private.key
+    gpg --options ~/.gnupg/options --import ~/.gnupg/private.key
+
     git config --global user.signingkey "$keyid"
-    git config --global commit.gpgSign true
+    git config --global commit.gpgsign true
   fi
 
   git config --global user.name "${committer_name}"
