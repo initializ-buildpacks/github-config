@@ -97,7 +97,7 @@ function util::tools::jam::install() {
     os=$(util::tools::os)
     arch=$(util::tools::arch)
 
-    curl "https://github.com/paketo-buildpacks/jam/releases/download/${version}/jam-${os}-${arch}" \
+    curl "https://github.com/initializ-buildpacks/jam/releases/download/${version}/jam-${os}-${arch}" \
       "${curl_args[@]}"
 
     chmod +x "${dir}/jam"
@@ -212,7 +212,7 @@ function util::tools::create-package::install () {
 
     if [[ ! -f "${dir}/create-package" ]]; then
       util::print::title "Installing create-package"
-      GOBIN="${dir}" go install -ldflags="-s -w" "github.com/paketo-buildpacks/libpak/cmd/create-package@${version}"
+      GOBIN="${dir}" go install -ldflags="-s -w" "github.com/initializ-buildpacks/libpak/cmd/create-package@${version}"
     fi
 }
 

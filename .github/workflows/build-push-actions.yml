@@ -21,10 +21,10 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.PAKETO_BOT_GHCR_PACKAGES_READ_WRITE_TOKEN }}
+        password: ${{ secrets.PAT }}
     - name: Build and push ${{ matrix.image-dir }} image
       uses: docker/build-push-action@v5
       with:
         context: "{{defaultContext}}:actions/${{ matrix.image-dir }}"
         push: true
-        tags: "ghcr.io/paketo-buildpacks/actions/${{ matrix.image-dir }}:latest"
+        tags: "ghcr.io/initializ-buildpacks/actions/${{ matrix.image-dir }}:latest"

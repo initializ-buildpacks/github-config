@@ -33,6 +33,4 @@ runs:
         # Upload to s3://bucket/<dependency>/artifact.tgz
         aws s3 cp '${{ inputs.artifact-path }}' "s3://${{ inputs.bucket-name }}/${{ inputs.dependency-name }}/${filename}"
 
-        # Access at https://artifacts.paketo.io/<dependency>/artifact.tgz
-        uri="https://artifacts.paketo.io/${{ inputs.dependency-name }}/${filename}"
-        echo "uri=${uri}" >> "$GITHUB_OUTPUT"
+       

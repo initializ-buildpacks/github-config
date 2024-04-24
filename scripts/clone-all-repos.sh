@@ -58,7 +58,7 @@ function usage() {
   cat <<-USAGE
 clone-all-repos.sh [OPTIONS]
 
-Clones relevant Paketo Buildpacks and Paketo Community repos into a workspace.
+Clones relevant Initializ Buildpacks and Initializ Community repos into a workspace.
 
 OPTIONS
   --help              -h  prints the command usage
@@ -75,8 +75,8 @@ function repos::clone::all() {
   util::print::blue "Fetching GitHub teams..."
 
   IFS=$'\n' read -r -d '' -a teams < <(
-    teams::fetch paketo-buildpacks "${token}"
-    teams::fetch paketo-community "${token}"
+    teams::fetch initializ-buildpacks "${token}"
+    teams::fetch initializ-community "${token}"
 
     printf '\0' # NULL-terminate the input
   )

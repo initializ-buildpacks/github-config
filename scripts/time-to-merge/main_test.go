@@ -65,35 +65,35 @@ func TestMergeTimeCalculator(t *testing.T) {
 			mockGithubServer    *httptest.Server
 			mockGithubServerURI string
 
-			paketoCommunityRepoResponse  string
-			paketoBuildpacksRepoResponse string
+			initializCommunityRepoResponse  string
+			initializBuildpacksRepoResponse string
 
-			paketoBuildpacksClosedPRsResponse string
-			paketoCommunityClosedPRsResponse  string
+			initializBuildpacksClosedPRsResponse string
+			initializCommunityClosedPRsResponse  string
 
-			paketoBuildpacksCommitsResponse string
-			paketoCommunityCommitsResponse  string
+			initializBuildpacksCommitsResponse string
+			initializCommunityCommitsResponse  string
 		)
 
 		it.Before(func() {
-			paketoBuildpacksRepoResponse = fmt.Sprintf(repoResponseBase, "example-repo", "paketo-buildpacks")
-			paketoCommunityRepoResponse = fmt.Sprintf(repoResponseBase, "other-example-repo", "paketo-community")
+			initializBuildpacksRepoResponse = fmt.Sprintf(repoResponseBase, "example-repo", "initializ-buildpacks")
+			initializCommunityRepoResponse = fmt.Sprintf(repoResponseBase, "other-example-repo", "initializ-community")
 
-			paketoBuildpacksClosedPRsResponse = fmt.Sprintf(closedPRsResponseBase,
+			initializBuildpacksClosedPRsResponse = fmt.Sprintf(closedPRsResponseBase,
 				time.Now().UTC().Format(time.RFC3339),
 				"example-contributor",
-				"paketo-buildpacks",
+				"initializ-buildpacks",
 				"example-repo")
-			paketoCommunityClosedPRsResponse = fmt.Sprintf(closedPRsResponseBase,
+			initializCommunityClosedPRsResponse = fmt.Sprintf(closedPRsResponseBase,
 				time.Now().UTC().Format(time.RFC3339),
 				"other-example-contributor",
-				"paketo-community",
+				"initializ-community",
 				"other-example-repo")
 
-			paketoBuildpacksCommitsResponse = fmt.Sprintf(closedPRCommitsResponseBase,
+			initializBuildpacksCommitsResponse = fmt.Sprintf(closedPRCommitsResponseBase,
 				"example-committer",
 				time.Now().UTC().Add(-1*time.Hour).Format(time.RFC3339))
-			paketoCommunityCommitsResponse = fmt.Sprintf(closedPRCommitsResponseBase,
+			initializCommunityCommitsResponse = fmt.Sprintf(closedPRCommitsResponseBase,
 				"other-example-committer",
 				time.Now().UTC().Add(-15*time.Minute).Format(time.RFC3339))
 
@@ -104,29 +104,29 @@ func TestMergeTimeCalculator(t *testing.T) {
 				}
 
 				switch req.URL.Path {
-				case "/orgs/paketo-buildpacks/repos":
+				case "/orgs/initializ-buildpacks/repos":
 					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w, paketoBuildpacksRepoResponse)
+					fmt.Fprintln(w, initializBuildpacksRepoResponse)
 
-				case "/orgs/paketo-community/repos":
+				case "/orgs/initializ-community/repos":
 					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w, paketoCommunityRepoResponse)
+					fmt.Fprintln(w, initializCommunityRepoResponse)
 
-				case "/repos/paketo-buildpacks/example-repo/pulls":
+				case "/repos/initializ-buildpacks/example-repo/pulls":
 					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w, paketoBuildpacksClosedPRsResponse)
+					fmt.Fprintln(w, initializBuildpacksClosedPRsResponse)
 
-				case "/repos/paketo-community/other-example-repo/pulls":
+				case "/repos/initializ-community/other-example-repo/pulls":
 					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w, paketoCommunityClosedPRsResponse)
+					fmt.Fprintln(w, initializCommunityClosedPRsResponse)
 
-				case "/repos/paketo-buildpacks/example-repo/pulls/1/commits":
+				case "/repos/initializ-buildpacks/example-repo/pulls/1/commits":
 					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w, paketoBuildpacksCommitsResponse)
+					fmt.Fprintln(w, initializBuildpacksCommitsResponse)
 
-				case "/repos/paketo-community/other-example-repo/pulls/1/commits":
+				case "/repos/initializ-community/other-example-repo/pulls/1/commits":
 					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w, paketoCommunityCommitsResponse)
+					fmt.Fprintln(w, initializCommunityCommitsResponse)
 				default:
 					t.Fatal(fmt.Sprintf("unknown path: %s", req.URL.Path))
 				}
@@ -140,7 +140,7 @@ func TestMergeTimeCalculator(t *testing.T) {
 
 		context("given a valid auth token is provided", func() {
 			it.Before(func() {
-				os.Setenv("PAKETO_GITHUB_TOKEN", "some-token")
+				os.Setenv("PAT", "some-token")
 			})
 			it("correctly calculates median merge time of closed PRs from the past 30 days", func() {
 				command := exec.Command(mergeTimeCalculator, "--server", mockGithubServer.URL)
@@ -154,12 +154,12 @@ func TestMergeTimeCalculator(t *testing.T) {
 				out := string(buffer.Contents())
 
 				Expect(out).To(ContainLines(
-					`Pull request paketo-buildpacks/example-repo #1 by example-contributor`,
+					`Pull request initializ-buildpacks/example-repo #1 by example-contributor`,
 					`took 60.000000 minutes to merge.`,
 				))
 
 				Expect(out).To(ContainLines(
-					`Pull request paketo-community/other-example-repo #1 by other-example-contributor`,
+					`Pull request initializ-community/other-example-repo #1 by other-example-contributor`,
 					`took 15.000000 minutes to merge.`,
 				))
 			})
@@ -167,7 +167,7 @@ func TestMergeTimeCalculator(t *testing.T) {
 
 		context("given no auth token has been provided", func() {
 			it.Before(func() {
-				os.Setenv("PAKETO_GITHUB_TOKEN", "")
+				os.Setenv("PAT", "")
 			})
 
 			it("exits and says that an auth token is needed", func() {
@@ -182,12 +182,12 @@ func TestMergeTimeCalculator(t *testing.T) {
 
 				out := string(buffer.Contents())
 
-				Expect(out).To(ContainLines(`Please set PAKETO_GITHUB_TOKEN`))
+				Expect(out).To(ContainLines(`Please set PAT`))
 			})
 		})
 
 		it.After(func() {
-			os.Setenv("PAKETO_GITHUB_TOKEN", "abcdefg")
+			os.Setenv("PAT", "abcdefg")
 		})
 
 		context("given there is an issue getting repos from an org", func() {
@@ -199,34 +199,34 @@ func TestMergeTimeCalculator(t *testing.T) {
 					}
 
 					switch req.URL.Path {
-					case "/orgs/paketo-buildpacks/repos":
+					case "/orgs/initializ-buildpacks/repos":
 						fmt.Fprintf(w, "unknown path: %s\n", req.URL.Path)
 
-					case "/orgs/paketo-community/repos":
+					case "/orgs/initializ-community/repos":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityRepoResponse)
+						fmt.Fprintln(w, initializCommunityRepoResponse)
 
-					case "/repos/paketo-buildpacks/example-repo/pulls":
+					case "/repos/initializ-buildpacks/example-repo/pulls":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoBuildpacksClosedPRsResponse)
+						fmt.Fprintln(w, initializBuildpacksClosedPRsResponse)
 
-					case "/repos/paketo-community/other-example-repo/pulls":
+					case "/repos/initializ-community/other-example-repo/pulls":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityClosedPRsResponse)
+						fmt.Fprintln(w, initializCommunityClosedPRsResponse)
 
-					case "/repos/paketo-buildpacks/example-repo/pulls/1/commits":
+					case "/repos/initializ-buildpacks/example-repo/pulls/1/commits":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoBuildpacksCommitsResponse)
+						fmt.Fprintln(w, initializBuildpacksCommitsResponse)
 
-					case "/repos/paketo-community/other-example-repo/pulls/2/commits":
+					case "/repos/initializ-community/other-example-repo/pulls/2/commits":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityCommitsResponse)
+						fmt.Fprintln(w, initializCommunityCommitsResponse)
 					default:
 						t.Fatal(fmt.Sprintf("unknown path: %s", req.URL.Path))
 					}
 				}))
 
-				os.Setenv("PAKETO_GITHUB_TOKEN", "abcdefg")
+				os.Setenv("PAT", "abcdefg")
 			})
 
 			it.After(func() {
@@ -247,7 +247,7 @@ func TestMergeTimeCalculator(t *testing.T) {
 
 				Expect(out).To(ContainSubstring("failed to calculate merge times: failed to get repositories:"))
 				Expect(out).NotTo(ContainLines(
-					`Pull request paketo-community/other-example-repo #2 by other-example-contributor`,
+					`Pull request initializ-community/other-example-repo #2 by other-example-contributor`,
 					`took 15.000000 minutes to merge.`,
 				))
 			})
@@ -262,34 +262,34 @@ func TestMergeTimeCalculator(t *testing.T) {
 					}
 
 					switch req.URL.Path {
-					case "/orgs/paketo-buildpacks/repos":
+					case "/orgs/initializ-buildpacks/repos":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoBuildpacksRepoResponse)
+						fmt.Fprintln(w, initializBuildpacksRepoResponse)
 
-					case "/orgs/paketo-community/repos":
+					case "/orgs/initializ-community/repos":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityRepoResponse)
+						fmt.Fprintln(w, initializCommunityRepoResponse)
 
-					case "/repos/paketo-buildpacks/example-repo/pulls":
+					case "/repos/initializ-buildpacks/example-repo/pulls":
 						fmt.Fprintf(w, "unknown path: %s\n", req.URL.Path)
 
-					case "/repos/paketo-community/other-example-repo/pulls":
+					case "/repos/initializ-community/other-example-repo/pulls":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityClosedPRsResponse)
+						fmt.Fprintln(w, initializCommunityClosedPRsResponse)
 
-					case "/repos/paketo-buildpacks/example-repo/pulls/1/commits":
+					case "/repos/initializ-buildpacks/example-repo/pulls/1/commits":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoBuildpacksCommitsResponse)
+						fmt.Fprintln(w, initializBuildpacksCommitsResponse)
 
-					case "/repos/paketo-community/other-example-repo/pulls/2/commits":
+					case "/repos/initializ-community/other-example-repo/pulls/2/commits":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityCommitsResponse)
+						fmt.Fprintln(w, initializCommunityCommitsResponse)
 					default:
 						t.Fatal(fmt.Sprintf("unknown path: %s", req.URL.Path))
 					}
 				}))
 
-				os.Setenv("PAKETO_GITHUB_TOKEN", "abcdefg")
+				os.Setenv("PAT", "abcdefg")
 			})
 
 			it.After(func() {
@@ -321,34 +321,34 @@ func TestMergeTimeCalculator(t *testing.T) {
 					}
 
 					switch req.URL.Path {
-					case "/orgs/paketo-buildpacks/repos":
+					case "/orgs/initializ-buildpacks/repos":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoBuildpacksRepoResponse)
+						fmt.Fprintln(w, initializBuildpacksRepoResponse)
 
-					case "/orgs/paketo-community/repos":
+					case "/orgs/initializ-community/repos":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityRepoResponse)
+						fmt.Fprintln(w, initializCommunityRepoResponse)
 
-					case "/repos/paketo-buildpacks/example-repo/pulls":
+					case "/repos/initializ-buildpacks/example-repo/pulls":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoBuildpacksClosedPRsResponse)
+						fmt.Fprintln(w, initializBuildpacksClosedPRsResponse)
 
-					case "/repos/paketo-community/other-example-repo/pulls":
+					case "/repos/initializ-community/other-example-repo/pulls":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityClosedPRsResponse)
+						fmt.Fprintln(w, initializCommunityClosedPRsResponse)
 
-					case "/repos/paketo-buildpacks/example-repo/pulls/1/commits":
+					case "/repos/initializ-buildpacks/example-repo/pulls/1/commits":
 						fmt.Fprintf(w, "unknown path: %s\n", req.URL.Path)
 
-					case "/repos/paketo-community/other-example-repo/pulls/2/commits":
+					case "/repos/initializ-community/other-example-repo/pulls/2/commits":
 						w.WriteHeader(http.StatusOK)
-						fmt.Fprintln(w, paketoCommunityCommitsResponse)
+						fmt.Fprintln(w, initializCommunityCommitsResponse)
 					default:
 						t.Fatal(fmt.Sprintf("unknown path: %s", req.URL.Path))
 					}
 				}))
 
-				os.Setenv("PAKETO_GITHUB_TOKEN", "abcdefg")
+				os.Setenv("PAT", "abcdefg")
 			})
 
 			it.After(func() {

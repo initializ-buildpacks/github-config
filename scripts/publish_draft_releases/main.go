@@ -20,7 +20,7 @@ import (
 var (
 	defaultOwningTeamRegex = "[Mm]aintainer"
 	defaultRepoRegex       = ".*"
-	defaultOrgs            = []string{"paketo-buildpacks", "paketo-community"}
+	defaultOrgs            = []string{"initializ-buildpacks", "initializ-community"}
 )
 
 type Teams []Team

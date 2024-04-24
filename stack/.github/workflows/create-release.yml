@@ -34,41 +34,41 @@ jobs:
     steps:
     - name: Find and Download Previous Build Receipt
       id: previous_build
-      uses: paketo-buildpacks/github-config/actions/release/find-and-download-asset@main
+      uses: initializ-buildpacks/github-config/actions/release/find-and-download-asset@main
       with:
         asset_pattern: "${{ env.BUILD_RECEIPT_FILENAME }}"
         search_depth: 1
         repo: ${{ github.repository }}
         output_path: "/github/workspace/${{ env.BUILD_RECEIPT_FILENAME }}"
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
 
     - name: Find and Download Previous Run Receipt
       id: previous_run
-      uses: paketo-buildpacks/github-config/actions/release/find-and-download-asset@main
+      uses: initializ-buildpacks/github-config/actions/release/find-and-download-asset@main
       with:
         asset_pattern: "${{ env.RUN_RECEIPT_FILENAME }}"
         search_depth: 1
         repo: ${{ github.repository }}
         output_path: "/github/workspace/${{ env.RUN_RECEIPT_FILENAME }}"
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
 
     - name: Get Package List
       id: packages
       if: ${{ steps.previous_build.outputs.output_path != '' && steps.previous_run.outputs.output_path != '' }}
-      uses: paketo-buildpacks/github-config/actions/stack/generate-package-list@main
+      uses: initializ-buildpacks/github-config/actions/stack/generate-package-list@main
       with:
         build_receipt: "${{ github.workspace }}/${{ env.BUILD_RECEIPT_FILENAME }}"
         run_receipt: "${{ github.workspace }}/${{ env.RUN_RECEIPT_FILENAME }}"
 
     - name: Find and Download Previous Patched USNs
       id: download_patched
-      uses: paketo-buildpacks/github-config/actions/release/find-and-download-asset@main
+      uses: initializ-buildpacks/github-config/actions/release/find-and-download-asset@main
       with:
         asset_pattern: "${{ env.PATCHED_USNS_FILENAME }}"
         search_depth: "-1"   # Search all releases
         repo: ${{ github.repository }}
         output_path: "/github/workspace/${{ env.PATCHED_USNS_FILENAME }}"
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
 
     - name: Output Patched USNs as JSON String
       id: patched
@@ -81,14 +81,14 @@ jobs:
       id: distro
       run: |
         # Extract distro from repo name:
-        # paketo-buildpacks/jammy-tiny-stack --> jammy
+        # initializ-buildpacks/jammy-tiny-stack --> jammy
         distro="$(echo "${{ github.repository }}" | sed 's/^.*\///' | sed 's/\-.*$//')"
         echo "Ubuntu distribution: ${distro}"
         printf "distro=%s\n" "${distro}" >> "$GITHUB_OUTPUT"
 
     - name: Get New USNs
       id: usns
-      uses: paketo-buildpacks/github-config/actions/stack/get-usns@main
+      uses: initializ-buildpacks/github-config/actions/stack/get-usns@main
       with:
         distribution: ${{ steps.distro.outputs.distro }}
         packages: ${{ steps.packages.outputs.packages }}
@@ -224,34 +224,34 @@ jobs:
 
     - name: Find and Download Previous Build Receipt
       if: ${{ steps.check_previous.outputs.exists == 'true' }}
-      uses: paketo-buildpacks/github-config/actions/release/find-and-download-asset@main
+      uses: initializ-buildpacks/github-config/actions/release/find-and-download-asset@main
       with:
         asset_pattern: "${{ env.BUILD_RECEIPT_FILENAME }}"
         search_depth: 1
         repo: ${{ github.repository }}
         output_path: "/github/workspace/previous-${{ env.BUILD_RECEIPT_FILENAME }}"
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
 
     - name: Find and Download Previous Run Receipt
       if: ${{ steps.check_previous.outputs.exists == 'true' }}
-      uses: paketo-buildpacks/github-config/actions/release/find-and-download-asset@main
+      uses: initializ-buildpacks/github-config/actions/release/find-and-download-asset@main
       with:
         asset_pattern: "${{ env.RUN_RECEIPT_FILENAME }}"
         search_depth: 1
         repo: ${{ github.repository }}
         output_path: "/github/workspace/previous-${{ env.RUN_RECEIPT_FILENAME }}"
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
 
     - name: Compare Build Packages
       id: build_diff
-      uses: paketo-buildpacks/github-config/actions/stack/diff-package-receipts@main
+      uses: initializ-buildpacks/github-config/actions/stack/diff-package-receipts@main
       with:
         previous: "/github/workspace/previous-${{ env.BUILD_RECEIPT_FILENAME }}"
         current: "/github/workspace/${{ env.BUILD_RECEIPT_FILENAME }}"
 
     - name: Compare Run Packages
       id: run_diff
-      uses: paketo-buildpacks/github-config/actions/stack/diff-package-receipts@main
+      uses: initializ-buildpacks/github-config/actions/stack/diff-package-receipts@main
       with:
         previous: "/github/workspace/previous-${{ env.RUN_RECEIPT_FILENAME }}"
         current: "/github/workspace/${{ env.RUN_RECEIPT_FILENAME }}"
@@ -424,7 +424,7 @@ jobs:
     - name: Increment Tag
       if: github.event.inputs.version == ''
       id: semver
-      uses: paketo-buildpacks/github-config/actions/tag/increment-tag@main
+      uses: initializ-buildpacks/github-config/actions/tag/increment-tag@main
       with:
         allow_head_tagged: true
 
@@ -452,7 +452,7 @@ jobs:
       run: |
         full=${{ github.repository }}
         # Strip off the org and slash from repo name
-        # paketo-buildpacks/repo-name --> repo-name
+        # initializ-buildpacks/repo-name --> repo-name
         repo=$(echo "${full}" | sed 's/^.*\///')
         echo "github_repo_name=${repo}" >> "$GITHUB_OUTPUT"
 
@@ -464,10 +464,10 @@ jobs:
 
     - name: Create Release Notes
       id: notes
-      uses: paketo-buildpacks/github-config/actions/stack/release-notes@main
+      uses: initializ-buildpacks/github-config/actions/stack/release-notes@main
       with:
-        build_image: "paketobuildpacks/build-${{ steps.repo_name.outputs.registry_repo_name }}:${{ steps.tag.outputs.tag }}"
-        run_image: "paketobuildpacks/run-${{ steps.repo_name.outputs.registry_repo_name }}:${{ steps.tag.outputs.tag }}"
+        build_image: "initializbuildpacks/build-${{ steps.repo_name.outputs.registry_repo_name }}:${{ steps.tag.outputs.tag }}"
+        run_image: "initializbuildpacks/run-${{ steps.repo_name.outputs.registry_repo_name }}:${{ steps.tag.outputs.tag }}"
         build_packages_added: ${{ needs.diff.outputs.build_added }}
         build_packages_modified: ${{ needs.diff.outputs.build_modified }}
         build_packages_removed_with_force: ${{ needs.diff.outputs.build_removed_with_force }}
@@ -524,10 +524,10 @@ jobs:
         printf "assets=%s\n" "${assets}" >> "$GITHUB_OUTPUT"
 
     - name: Create Release
-      uses: paketo-buildpacks/github-config/actions/release/create@main
+      uses: initializ-buildpacks/github-config/actions/release/create@main
       with:
         repo: ${{ github.repository }}
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
         tag_name: v${{ steps.tag.outputs.tag }}
         target_commitish: ${{ github.sha }}
         name: v${{ steps.tag.outputs.tag }}
@@ -542,7 +542,7 @@ jobs:
     if: ${{ always() && needs.poll_usns.result == 'failure' || needs.create_stack.result == 'failure' || needs.diff.result == 'failure' || needs.test.result == 'failure' || needs.release.result == 'failure' || needs.packages_changed.result == 'failure' || needs.stack_files_changed.result == 'failure' }}
     steps:
     - name: File Failure Alert Issue
-      uses: paketo-buildpacks/github-config/actions/issue/file@main
+      uses: initializ-buildpacks/github-config/actions/issue/file@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         repo: ${{ github.repository }}
@@ -551,6 +551,6 @@ jobs:
         issue_title: "Failure: Create Release workflow"
         issue_body: |
           Create Release workflow [failed](https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}).
-          Please take a look to ensure CVE patches can be released. (cc @paketo-buildpacks/stacks-maintainers).
+          Please take a look to ensure CVE patches can be released. (cc @initializ-buildpacks/stacks-maintainers).
         comment_body: |
           Another failure occurred: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}

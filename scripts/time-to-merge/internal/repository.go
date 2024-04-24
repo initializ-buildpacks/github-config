@@ -39,7 +39,7 @@ func GetOrgRepos(org string, serverURI string) ([]Repository, error) {
 		return nil, fmt.Errorf("failed to create http GET request for repositories: %s", err)
 	}
 
-	request.Header.Add("Authorization", fmt.Sprintf("token %s", os.Getenv("PAKETO_GITHUB_TOKEN")))
+	request.Header.Add("Authorization", fmt.Sprintf("token %s", os.Getenv("PAT")))
 
 	response, err := client.Do(request)
 	if err != nil {
@@ -105,7 +105,7 @@ func getClosedPullRequests(repo Repository, serverURI string) ([]PullRequest, er
 		return nil, fmt.Errorf("failed to create http GET request for closed PRs: %s", err)
 	}
 
-	request.Header.Add("Authorization", fmt.Sprintf("token %s", os.Getenv("PAKETO_GITHUB_TOKEN")))
+	request.Header.Add("Authorization", fmt.Sprintf("token %s", os.Getenv("PAT")))
 
 	response, err := client.Do(request)
 	if err != nil {

@@ -97,7 +97,7 @@ function util::tools::jam::install() {
     os=$(util::tools::os)
     arch=$(util::tools::arch)
 
-    curl "https://github.com/paketo-buildpacks/jam/releases/download/${version}/jam-${os}-${arch}" \
+    curl "https://github.com/initializ-buildpacks/jam/releases/download/${version}/jam-${os}-${arch}" \
       "${curl_args[@]}"
 
     chmod +x "${dir}/jam"

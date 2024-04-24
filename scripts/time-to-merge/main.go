@@ -11,7 +11,7 @@ import (
 	"github.com/initializ-buildpacks/github-config/scripts/time-to-merge/internal"
 )
 
-var orgs = []string{"paketo-buildpacks", "paketo-community"}
+var orgs = []string{"initializ-buildpacks", "initializ-community"}
 
 func main() {
 	var mergeTimes []float64
@@ -23,8 +23,8 @@ func main() {
 	flag.IntVar(&numWorkers, "workers", 1, "number of concurrent workers to use")
 	flag.Parse()
 
-	if os.Getenv("PAKETO_GITHUB_TOKEN") == "" {
-		fmt.Println("Please set PAKETO_GITHUB_TOKEN")
+	if os.Getenv("PAT") == "" {
+		fmt.Println("Please set PAT")
 		os.Exit(1)
 	}
 

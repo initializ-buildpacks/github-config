@@ -7,7 +7,7 @@ CNBs.
 
 Run [scripts/sanity.sh](scripts/sanity.sh) to see if the changes you made to this repo are valid.
 
-Run [scripts/repo_rules.sh](scripts/repo_rules.sh) to see if your paketo cnb
+Run [scripts/repo_rules.sh](scripts/repo_rules.sh) to see if your initializ cnb
 github repo has recommended settings.
 
 ## How do I consume this common config

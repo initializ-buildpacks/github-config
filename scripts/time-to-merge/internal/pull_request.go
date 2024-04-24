@@ -65,7 +65,7 @@ func getPullRequestCommits(pullRequest PullRequest, serverURI string) ([]Commit,
 	if err != nil {
 		return nil, fmt.Errorf("failed to create http GET request for commits: %s", err)
 	}
-	request.Header.Add("Authorization", fmt.Sprintf("token %s", os.Getenv("PAKETO_GITHUB_TOKEN")))
+	request.Header.Add("Authorization", fmt.Sprintf("token %s", os.Getenv("PAT")))
 
 	response, err := client.Do(request)
 	if err != nil {
