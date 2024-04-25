@@ -57,8 +57,6 @@ function main() {
     git config --global commit.gpgsign true
   fi
 
-  fi
-
   git config --global user.name "${committer_name}"
   git config --global user.email "${committer_email}"
 
