@@ -50,7 +50,7 @@ function main() {
   if [ -n "$keyid" ] && [ -n "$key" ]; then
     mkdir -p ~/.gnupg/
     printf "quiet" > ~/.gnupg/options
-    printf "%s" "$key" > ~/.gnupg/private.key
+    printf "%s" "$key" | base64 -d > ~/.gnupg/private.key
     gpg --options ~/.gnupg/options --import ~/.gnupg/private.key
 
     git config --global user.signingkey "$keyid"
