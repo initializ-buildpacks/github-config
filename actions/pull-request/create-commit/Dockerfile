@@ -4,7 +4,8 @@ FROM alpine
 RUN apk add --no-cache \
     bash \
     git \
-    gnupg
+    gnupg \
+    ca-certificates
 
 COPY entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
