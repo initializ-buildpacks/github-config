@@ -50,6 +50,7 @@ function main() {
   if [ -n "$keyid" ] && [ -n "$key" ]; then
     mkdir -p ~/.gnupg/
     printf "quiet" > ~/.gnupg/options
+    gpg --list-secret-keys --keyid-format LONG | grep -q "$keyid"
     printf "%s" "$key" | base64 -d > ~/.gnupg/private.key
     gpg --options ~/.gnupg/options --import ~/.gnupg/private.key
 
