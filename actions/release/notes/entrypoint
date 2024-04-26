@@ -43,7 +43,7 @@ function main() {
 
   local jam_version
   jam_version="$(
-    curl "https://api.github.com/repos/initializ-buildpacks/jam/releases/latest" \
+    curl "https://api.github.com/repos/paketo-buildpacks/jam/releases/latest" \
       --fail-with-body \
       --show-error \
       --header "Authorization: token ${token}" \
