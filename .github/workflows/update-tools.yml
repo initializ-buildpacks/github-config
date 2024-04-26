@@ -40,7 +40,7 @@ jobs:
       uses: initializ-buildpacks/github-config/actions/tools/latest@main
       with:
         token: ${{ secrets.PAT }}
-        repo: initializ-buildpacks/libpak
+        repo: paketo-buildpacks/libpak
 
     - name: Fetch Latest syft
       id: latest-syft
