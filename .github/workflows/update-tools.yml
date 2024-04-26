@@ -19,7 +19,7 @@ jobs:
     - name: Checkout Branch
       uses: initializ-buildpacks/github-config/actions/pull-request/checkout-branch@main
       with:
-        branch: automation/tools/update
+        branch: automations/tools/update
 
     - name: Fetch Latest Jam
       id: latest-jam
@@ -111,7 +111,7 @@ jobs:
       if: ${{ steps.commit.outputs.commit_sha != '' }}
       uses: initializ-buildpacks/github-config/actions/pull-request/push-branch@main
       with:
-        branch: automation/tools/update
+        branch: automations/tools/update
 
     - name: Open Pull Request
       if: ${{ steps.commit.outputs.commit_sha != '' }}
@@ -119,7 +119,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         title: "Updates tools"
-        branch: automation/tools/update
+        branch: automations/tools/update
 
 
   failure:
