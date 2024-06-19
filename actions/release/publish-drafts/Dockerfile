@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache \
+RUN apk add \
     bash \
     git \
     github-cli \
@@ -8,8 +8,4 @@ RUN apk add --no-cache \
     && rm -rf /var/cache/apk/*
 
 COPY entrypoint /entrypoint
-
-# Ensure the entrypoint script has execute permissions
-RUN chmod +x /entrypoint
-
 ENTRYPOINT ["/entrypoint"]

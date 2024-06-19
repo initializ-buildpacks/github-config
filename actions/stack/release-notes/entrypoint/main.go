@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"text/template"
 )
 
@@ -49,6 +50,8 @@ func main() {
 		RunPackagesModifiedJSON   string
 		RunPackagesRemovedJSON    string
 		PatchedJSON               string
+		SupportsUsns              string
+		ReceiptsShowLimit         string
 	}
 
 	flag.StringVar(&config.BuildImage, "build-image", "", "Registry location of stack build image")
@@ -56,31 +59,44 @@ func main() {
 	flag.StringVar(&config.BuildCveReport, "build-cve-report", "", "CVE scan report path of build image in markdown format")
 	flag.StringVar(&config.RunCveReport, "run-cve-report", "", "CVE scan report path of run image in markdown format")
 	flag.StringVar(&config.PatchedJSON, "patched-usns", "", "JSON Array of patched USNs")
+	flag.StringVar(&config.SupportsUsns, "supports-usns", "", "Boolean variable to show patched USNs in release notes")
 	flag.StringVar(&config.BuildPackagesAddedJSON, "build-added", "", "JSON Array of packages added to build image")
 	flag.StringVar(&config.BuildPackagesModifiedJSON, "build-modified", "", "JSON Array of packages modified in build image")
 	flag.StringVar(&config.BuildPackagesRemovedJSON, "build-removed", "", "JSON Array of packages removed in build image")
 	flag.StringVar(&config.RunPackagesAddedJSON, "run-added", "", "JSON Array of packages added to run image")
 	flag.StringVar(&config.RunPackagesModifiedJSON, "run-modified", "", "JSON Array of packages modified in run image")
 	flag.StringVar(&config.RunPackagesRemovedJSON, "run-removed", "", "JSON Array of packages removed in run image")
+	flag.StringVar(&config.ReceiptsShowLimit, "receipts-show-limit", "2147483647", "Integer which defines the limit of whether it should show or not the receipts array of each image")
 	flag.Parse()
 
 	var contents struct {
-		PatchedArray   []USN
-		BuildAdded     []Package
-		BuildModified  []ModifiedPackage
-		BuildRemoved   []Package
-		RunAdded       []Package
-		RunModified    []ModifiedPackage
-		RunRemoved     []Package
-		BuildImage     string
-		RunImage       string
-		BuildCveReport string
-		RunCveReport   string
+		PatchedArray      []USN
+		SupportsUsns      bool
+		BuildAdded        []Package
+		BuildModified     []ModifiedPackage
+		BuildRemoved      []Package
+		RunAdded          []Package
+		RunModified       []ModifiedPackage
+		RunRemoved        []Package
+		BuildImage        string
+		RunImage          string
+		BuildCveReport    string
+		RunCveReport      string
+		ReceiptsShowLimit int
 	}
 
 	err := json.Unmarshal([]byte(fixEmptyArray(config.PatchedJSON)), &contents.PatchedArray)
 	if err != nil {
 		log.Fatalf("failed unmarshalling patched USNs: %s", err.Error())
+	}
+
+	if config.SupportsUsns == "" {
+		contents.SupportsUsns = true
+	} else {
+		contents.SupportsUsns, err = strconv.ParseBool(config.SupportsUsns)
+		if err != nil {
+			log.Fatalf("failed converting supportsUsns string to boolean: %s", err.Error())
+		}
 	}
 
 	err = json.Unmarshal([]byte(fixEmptyArray(config.BuildPackagesAddedJSON)), &contents.BuildAdded)
@@ -131,6 +147,11 @@ func main() {
 
 	contents.BuildImage = config.BuildImage
 	contents.RunImage = config.RunImage
+	contents.ReceiptsShowLimit, err = strconv.Atoi(config.ReceiptsShowLimit)
+
+	if err != nil {
+		log.Fatalf("failed converting receipts show limit string to int: %s", err.Error())
+	}
 
 	t, err := template.New("template.md").Parse(tString)
 	if err != nil {
