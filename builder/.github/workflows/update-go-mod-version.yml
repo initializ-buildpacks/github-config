@@ -2,7 +2,7 @@ name: Update Go version
 
 on:
   schedule:
-    - cron: '19 3 * * MON'  # every monday at 3:19 UTC
+    - cron: '53 5 * * MON'  # every monday at 5:53 UTC
   workflow_dispatch:
 
 concurrency: update-go
